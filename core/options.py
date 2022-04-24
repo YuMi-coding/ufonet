@@ -110,6 +110,7 @@ class UFONetOptions(optparse.OptionParser):
         self.add_option_group(group5)
         group6 = optparse.OptionGroup(self, "*Configure Attack(s)*")
         group6.add_option("-a", action="store", dest="target", help="[DDoS] attack a target (ex: -a 'http(s)://target.com')")
+        group6.add_option("--source", action="store", dest="source", help="[DDoS] attack a target with spoofed IP address.")
         group6.add_option("-f", action="store", dest="target_list", help="[DDoS] attack a list of targets (ex: -f 'targets.txt')")
         group6.add_option("-b", action="store", dest="place", help="Set place to attack (ex: -b '/path/big.jpg')")
         group6.add_option("-r", action="store", dest="rounds", help="Set number of rounds (ex: -r '1000') (default: 1)")

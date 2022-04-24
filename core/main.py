@@ -5542,7 +5542,7 @@ class UFONet(object):
             if self.options.ufosyn < 1:
                 self.options.ufosyn = 100 
             self.instance = UFOSYN() # instance main class for UFOSYN operations
-            self.t3 = threading.Thread(target=self.instance.attacking, args=(target, self.options.ufosyn)) # UFOSYN using threads
+            self.t3 = threading.Thread(target=self.instance.attacking, args=(target, self.options.ufosyn, self.options.source)) # UFOSYN using threads
             self.t3.daemon = True
             self.t3.start()
             self.update_ufosyn_stats() # add new UFOSYN attack to mothership stats
