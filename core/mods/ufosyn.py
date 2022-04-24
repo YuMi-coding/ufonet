@@ -91,4 +91,4 @@ class UFOSYN(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [UFOSYN] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        synize(ip, port, rounds) # attack with UFOSYN using threading
+        synize(ip, port, rounds, source) # attack with UFOSYN using threading
