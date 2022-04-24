@@ -41,8 +41,10 @@ def synize(ip, port, rounds, source_ip = None):
             window = randInt()
             IP_p = IP()
             if source_ip is None:
+                print("[Info] [UFOSYN] Using random source IP")
                 IP_p.src = randIP()
             else:
+                print("[Info] [UFOSYN] Using given source IP")
                 IP_p.src = source_ip
             try:
                 IP_p.dst = ip
