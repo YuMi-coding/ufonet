@@ -83,4 +83,4 @@ class TACHYON(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [TACHYON] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        dnsize(ip, port, rounds, source=None) # attack with TACHYON using threading
+        dnsize(ip, port, rounds, source) # attack with TACHYON using threading

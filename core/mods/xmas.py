@@ -94,4 +94,4 @@ class XMAS(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [XMAS] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        xmasize(ip, sport, rounds, source = None) # attack with XMAS using threading
+        xmasize(ip, sport, rounds, source) # attack with XMAS using threading

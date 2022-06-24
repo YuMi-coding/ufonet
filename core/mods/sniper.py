@@ -68,4 +68,4 @@ class SNIPER(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [SNIPER] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        sniperize(ip, rounds, source=None) # attack with SNIPER using threading
+        sniperize(ip, rounds, source) # attack with SNIPER using threading

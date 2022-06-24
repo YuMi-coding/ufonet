@@ -86,4 +86,4 @@ class OVERLAP(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [OVERLAP] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        overlapize(ip, sport, rounds, source=None) # attack with OVERLAP using threading
+        overlapize(ip, sport, rounds, source) # attack with OVERLAP using threading
