@@ -71,7 +71,8 @@ def xmasize(ip, sport, rounds, source = None):
                 if xmas_sent % REPORT_PER_ATTACK == 0:
                     print("[Info] [AI] [XMAS] Fired 'ionized quartz' ["+str(xmas_sent)+"]")
                 # time.sleep(1/XMAS_SPEED) # sleep time required for balanced sucess
-            except:
+            except Exception as e:
+                print(e)
                 print("[Error] [AI] [XMAS] Failed to engage with 'ionized quartz' ["+str(n)+"]")
     except:
         print("[Error] [AI] [XMAS] Failing to engage... -> Is still target online? -> [Checking!]")
