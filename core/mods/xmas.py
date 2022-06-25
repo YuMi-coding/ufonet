@@ -51,7 +51,7 @@ def xmasize(ip, sport, rounds, source = None):
     xmas_sent = 0
     ifname = get_iface(source)
     if len(ifname) > 0:
-        s = conf.L2socket(iface = ifname)
+        s = conf.L3socket(iface = ifname)
     try:
         for x in range (0,int(rounds)):
             n=n+1
