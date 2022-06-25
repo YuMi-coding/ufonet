@@ -49,9 +49,9 @@ def get_iface(source):
 def xmasize(ip, sport, rounds, source = None):
     n=0
     xmas_sent = 0
-    iface = get_iface(source)
+    ifname = get_iface(source)
     if len(iface) > 0:
-        s = conf.L2socket()
+        s = conf.L2socket(iface = ifname)
     try:
         for x in range (0,int(rounds)):
             n=n+1
