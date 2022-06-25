@@ -10,6 +10,7 @@ with UFONet; if not, write to the Free Software Foundation, Inc., 51
 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
 import sys, random, socket
+import netifaces as ni
 
 from core.mods.mod_config import REPORT_PER_ATTACK, XMAS_SPEED
 try:
@@ -32,6 +33,18 @@ def randIP():
 def randInt():
     x = random.randint(1,65535) # TCP ports
     return x
+
+def get_iface(source):
+    for ifname in ni.interfaces():
+        try:
+            address_list = ni.ifaddresses(ifname)[ni.AF_INET]
+        except KeyError:
+            continue
+        # print(address_list)
+        address_list = [i['addr'] for i in address_list]
+        if source in address_list:
+            return ifname
+    return ""
 
 def xmasize(ip, sport, rounds, source = None):
     n=0
