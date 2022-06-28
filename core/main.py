@@ -5510,6 +5510,10 @@ class UFONet(object):
     def aiming_extra_weapons(self, target, proxy, loic, loris, ufosyn, spray, smurf, fraggle, xmas, ufoack, uforst, droper, overlap, pinger, ufoudp, nuke, tachyon, monlist, sniper):
         # perform some other extra attacks (such as DoS techniques)
         time.sleep(2) # aiming (multi-threading flow time compensation)
+        
+        address_dict = {'source': self.options.source,
+                        'start': self.options.port_start,
+                        'end': self.options.port_end}
         if loic:
             try:
                 self.options.loic = int(loic)
@@ -5518,7 +5522,7 @@ class UFONet(object):
             if self.options.loic < 1:
                 self.options.loic = 100
             self.instance = LOIC() # instance main class for LOIC operations
-            self.t1 = threading.Thread(target=self.instance.attacking, args=(target, self.options.loic, proxy, self.options.source)) # LOIC using threads + proxy
+            self.t1 = threading.Thread(target=self.instance.attacking, args=(target, self.options.loic, proxy, address_dict))# LOIC using threads + proxy
             self.t1.daemon = True # extra weapons are threaded as daemons
             self.t1.start()
             self.update_loic_stats() # add new LOIC attack to mothership stats

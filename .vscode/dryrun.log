@@ -1,0 +1,9 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory '/home/yumi/ufonet'
+echo "make source - Create source package"
+echo "make install - Install on local system"
+echo "make buildrpm - Generate a rpm package"
+echo "make builddeb - Generate a deb package"
+echo "make clean - Get rid of scratch and byte files"
+make: Leaving directory '/home/yumi/ufonet'
+ 

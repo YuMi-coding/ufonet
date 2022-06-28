@@ -1,0 +1,1 @@
+{"buildTargets":["all","builddeb","buildrpm","clean","install","source"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}

