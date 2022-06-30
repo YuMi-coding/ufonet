@@ -5582,7 +5582,7 @@ class UFONet(object):
             if self.options.xmas < 1:
                 self.options.xmas = 101
             self.instance = XMAS() # instance main class for XMAS operations
-            self.t6 = threading.Thread(target=self.instance.attacking, args=(target, self.options.xmas, self.options.source)) # XMAS using threads
+            self.t6 = threading.Thread(target=self.instance.attacking, args=(target, self.options.xmas, address_dict)) # XMAS using threads
             self.t6.daemon = True
             self.t6.start()
             self.update_xmas_stats() # add new XMAS attack to mothership stats
