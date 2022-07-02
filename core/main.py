@@ -5511,9 +5511,9 @@ class UFONet(object):
         # perform some other extra attacks (such as DoS techniques)
         time.sleep(2) # aiming (multi-threading flow time compensation)
         
-        address_dict = {'source': self.options.source,
-                        'start': self.options.port_start,
-                        'end': self.options.port_end}
+        address_dict = {'source': self.options.source, # String
+                        'start': int(self.options.port_start),
+                        'end': int(self.options.port_end)}
         if loic:
             try:
                 self.options.loic = int(loic)
@@ -5534,7 +5534,7 @@ class UFONet(object):
             if self.options.loris < 1:
                 self.options.loris = 101 
             self.instance = LORIS() # instance main class for LORIS operations
-            self.t2 = threading.Thread(target=self.instance.attacking, args=(target, self.options.loris, self.options.source)) # LORIS using threads
+            self.t2 = threading.Thread(target=self.instance.attacking, args=(target, self.options.loris, address_dict)) # LORIS using threads
             self.t2.daemon = True
             self.t2.start()
             self.update_loris_stats() # add new LORIS attack to mothership stats
@@ -5546,7 +5546,7 @@ class UFONet(object):
             if self.options.ufosyn < 1:
                 self.options.ufosyn = 100 
             self.instance = UFOSYN() # instance main class for UFOSYN operations
-            self.t3 = threading.Thread(target=self.instance.attacking, args=(target, self.options.ufosyn, self.options.source)) # UFOSYN using threads
+            self.t3 = threading.Thread(target=self.instance.attacking, args=(target, self.options.ufosyn, address_dict)) # UFOSYN using threads
             self.t3.daemon = True
             self.t3.start()
             self.update_ufosyn_stats() # add new UFOSYN attack to mothership stats
@@ -5558,7 +5558,7 @@ class UFONet(object):
             if self.options.spray < 1:
                 self.options.spray = 100
             self.instance = SPRAY() # instance main class for SPRAY operations
-            self.t4 = threading.Thread(target=self.instance.attacking, args=(target, self.options.spray, self.options.source)) # SPRAY using threads
+            self.t4 = threading.Thread(target=self.instance.attacking, args=(target, self.options.spray, address_dict)) # SPRAY using threads
             self.t4.daemon = True
             self.t4.start()
             self.update_spray_stats() # add new SPRAY attack to mothership stats
@@ -5570,7 +5570,7 @@ class UFONet(object):
             if self.options.smurf < 1:
                 self.options.smurf = 101
             self.instance = SMURF() # instance main class for SMURF operations
-            self.t5 = threading.Thread(target=self.instance.attacking, args=(target, self.options.smurf, self.options.source)) # SMURF using threads
+            self.t5 = threading.Thread(target=self.instance.attacking, args=(target, self.options.smurf, address_dict)) # SMURF using threads
             self.t5.daemon = True
             self.t5.start()
             self.update_smurf_stats() # add new SMURF attack to mothership stats
@@ -5595,7 +5595,7 @@ class UFONet(object):
                 if self.options.nuke < 1:
                     self.options.nuke = 10000
                 self.instance = NUKE() # instance main class for NUKE operations
-                self.t7 = threading.Thread(target=self.instance.attacking, args=(target, self.options.nuke, self.options.source)) # NUKE using threads
+                self.t7 = threading.Thread(target=self.instance.attacking, args=(target, self.options.nuke, address_dict)) # NUKE using threads
                 self.t7.daemon = True # extra weapons are threaded as daemons
                 self.t7.start()
                 self.update_nuke_stats() # add new NUKE attack to mothership stats
@@ -5609,7 +5609,7 @@ class UFONet(object):
             if self.options.tachyon < 1:
                 self.options.tachyon = 1000
             self.instance = TACHYON() # instance main class for TACHYON operations
-            self.t8 = threading.Thread(target=self.instance.attacking, args=(target, self.options.tachyon, self.options.source)) # TACHYON using threads
+            self.t8 = threading.Thread(target=self.instance.attacking, args=(target, self.options.tachyon, address_dict)) # TACHYON using threads
             self.t8.daemon = True
             self.t8.start()
             self.update_tachyon_stats() # add new TACHYON attack to mothership stats
@@ -5621,7 +5621,7 @@ class UFONet(object):
             if self.options.monlist < 1:
                 self.options.monlist = 1000
             self.instance = MONLIST() # instance main class for MONLIST operations
-            self.t9 = threading.Thread(target=self.instance.attacking, args=(target, self.options.monlist, self.options.source)) # MONLIST using threads
+            self.t9 = threading.Thread(target=self.instance.attacking, args=(target, self.options.monlist, address_dict)) # MONLIST using threads
             self.t9.daemon = True
             self.t9.start()
             self.update_monlist_stats() # add new MONLIST attack to mothership stats
@@ -5633,7 +5633,7 @@ class UFONet(object):
             if self.options.ufoack < 1:
                 self.options.ufoack = 101
             self.instance = UFOACK() # instance main class for UFOACK operations
-            self.t10 = threading.Thread(target=self.instance.attacking, args=(target, self.options.ufoack, self.options.source)) # UFOACK using threads
+            self.t10 = threading.Thread(target=self.instance.attacking, args=(target, self.options.ufoack, address_dict)) # UFOACK using threads
             self.t10.daemon = True
             self.t10.start()
             self.update_ufoack_stats() # add new UFOACK attack to mothership stats
@@ -5645,7 +5645,7 @@ class UFONet(object):
             if self.options.uforst < 1:
                 self.options.uforst = 101
             self.instance = UFORST() # instance main class for UFORST operations
-            self.t11 = threading.Thread(target=self.instance.attacking, args=(target, self.options.uforst, self.options.source)) # UFORST using threads
+            self.t11 = threading.Thread(target=self.instance.attacking, args=(target, self.options.uforst, address_dict)) # UFORST using threads
             self.t11.daemon = True
             self.t11.start()
             self.update_uforst_stats() # add new UFORST attack to mothership stats
@@ -5657,7 +5657,7 @@ class UFONet(object):
             if self.options.droper < 1:
                 self.options.droper = 101
             self.instance = DROPER() # instance main class for DROPER operations
-            self.t12 = threading.Thread(target=self.instance.attacking, args=(target, self.options.droper, self.options.source)) # DROPER using threads
+            self.t12 = threading.Thread(target=self.instance.attacking, args=(target, self.options.droper, address_dict)) # DROPER using threads
             self.t12.daemon = True
             self.t12.start()
             self.update_droper_stats() # add new DROPER attack to mothership stats
@@ -5669,7 +5669,7 @@ class UFONet(object):
             if self.options.overlap < 1:
                 self.options.overlap = 101
             self.instance = OVERLAP() # instance main class for OVERLAP operations
-            self.t13 = threading.Thread(target=self.instance.attacking, args=(target, self.options.overlap, self.options.source)) # OVERLAP using threads
+            self.t13 = threading.Thread(target=self.instance.attacking, args=(target, self.options.overlap, address_dict)) # OVERLAP using threads
             self.t13.daemon = True
             self.t13.start()
             self.update_overlap_stats() # add new OVERLAP attack to mothership stats
@@ -5681,7 +5681,7 @@ class UFONet(object):
             if self.options.pinger < 1:
                 self.options.pinger = 101
             self.instance = PINGER() # instance main class for PINGER operations
-            self.t14 = threading.Thread(target=self.instance.attacking, args=(target, self.options.pinger, self.options.source)) # PINGER using threads
+            self.t14 = threading.Thread(target=self.instance.attacking, args=(target, self.options.pinger, address_dict)) # PINGER using threads
             self.t14.daemon = True
             self.t14.start()
             self.update_pinger_stats() # add new PINGER attack to mothership stats
@@ -5693,7 +5693,7 @@ class UFONet(object):
             if self.options.ufoudp < 1:
                 self.options.ufoudp = 101
             self.instance = UFOUDP() # instance main class for UFOUDP operations
-            self.t15 = threading.Thread(target=self.instance.attacking, args=(target, self.options.ufoudp, self.options.source)) # UFOUDP using threads
+            self.t15 = threading.Thread(target=self.instance.attacking, args=(target, self.options.ufoudp, address_dict)) # UFOUDP using threads
             self.t15.daemon = True
             self.t15.start()
             self.update_ufoudp_stats() # add new UFOUDP attack to mothership stats
@@ -5705,7 +5705,7 @@ class UFONet(object):
             if self.options.fraggle < 1:
                 self.options.fraggle = 101
             self.instance = FRAGGLE() # instance main class for FRAGGLE operations
-            self.t16 = threading.Thread(target=self.instance.attacking, args=(target, self.options.fraggle, self.options.source)) # FRAGGLE using threads
+            self.t16 = threading.Thread(target=self.instance.attacking, args=(target, self.options.fraggle, address_dict)) # FRAGGLE using threads
             self.t16.daemon = True
             self.t16.start()
             self.update_fraggle_stats() # add new FRAGGLE attack to mothership stats
@@ -5717,7 +5717,7 @@ class UFONet(object):
             if self.options.sniper < 1:
                 self.options.sniper = 101
             self.instance = SNIPER() # instance main class for SNIPER operations
-            self.t17 = threading.Thread(target=self.instance.attacking, args=(target, self.options.sniper, self.options.source)) # SNIPER using threads
+            self.t17 = threading.Thread(target=self.instance.attacking, args=(target, self.options.sniper, address_dict)) # SNIPER using threads
             self.t17.daemon = True
             self.t17.start()
             self.update_sniper_stats() # add new SNIPER attack to mothership stats

