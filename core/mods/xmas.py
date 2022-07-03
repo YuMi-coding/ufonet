@@ -58,6 +58,7 @@ def xmasize(ip, sport, rounds, address_dicts):
     ifname = get_iface(source)
     if len(ifname) > 0:
         s = conf.L3socket(iface = ifname)
+        print("Using socket in ifname,", ifname)
     else:
         s = conf.L3socket()
     try:
