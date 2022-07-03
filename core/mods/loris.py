@@ -106,7 +106,7 @@ def tractor(self, ip, requests, address_dict):
                     self.sockets.remove(sock)
             for i in range(requests - len(self.sockets)):
                 print("[Info] [AI] [LORIS] Re-opening closed 'tractor beam' -> [RE-LINKED!]")
-                sock, ip = setupSocket(self, ip, address_dict=)
+                sock, ip = setupSocket(self, ip, address_dict)
                 if sock:
                     self.sockets.append(sock)
     except:
