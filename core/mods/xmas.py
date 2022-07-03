@@ -45,7 +45,7 @@ def get_iface(source):
             address_list = ni.ifaddresses(ifname)[ni.AF_INET]
         except KeyError:
             continue
-        # print(address_list)
+        print(address_list)
         address_list = [i['addr'] for i in address_list]
         if source in address_list:
             return ifname
@@ -58,6 +58,8 @@ def xmasize(ip, sport, rounds, address_dicts):
     ifname = get_iface(source)
     if len(ifname) > 0:
         s = conf.L3socket(iface = ifname)
+    else:
+        s = conf.L3socket()
     try:
         for x in range (0,int(rounds)):
             n=n+1
