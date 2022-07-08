@@ -1246,8 +1246,11 @@ class UFONet(object):
                 if not zombies:
                     return
                 options.target = self.parse_url_encoding(options.target) # parse for proper url encoding
+                print("passed target")
                 attack = self.attacking(zombies, options.target)
+                print("passed attacking")
                 self.update_missions_stats() # update mothership missions stats
+                print("passed mission")
             except Exception as e:
                 print ("\n[Error] [AI] Something wrong attacking!\n", e)
                 if DEBUG == True:
