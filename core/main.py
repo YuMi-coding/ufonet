@@ -5509,7 +5509,7 @@ class UFONet(object):
 
     def aiming_extra_weapons(self, target, proxy, loic, loris, ufosyn, spray, smurf, fraggle, xmas, ufoack, uforst, droper, overlap, pinger, ufoudp, nuke, tachyon, monlist, sniper):
         # perform some other extra attacks (such as DoS techniques)
-        # time.sleep(1) # aiming (multi-threading flow time compensation)
+        time.sleep(2) # aiming (multi-threading flow time compensation)
 
         address_dict = {'source': self.options.source, # String
                         'start': int(self.options.port_start) if isinstance(self.options.port_start, int) else None,
