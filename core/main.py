@@ -1243,6 +1243,7 @@ class UFONet(object):
             try:
                 self.banner()
                 zombies = self.extract_zombies()
+                print("passed zombies", zombies)
                 if not zombies:
                     return
                 options.target = self.parse_url_encoding(options.target) # parse for proper url encoding
