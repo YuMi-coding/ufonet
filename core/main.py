@@ -1248,8 +1248,8 @@ class UFONet(object):
                 options.target = self.parse_url_encoding(options.target) # parse for proper url encoding
                 attack = self.attacking(zombies, options.target)
                 self.update_missions_stats() # update mothership missions stats
-            except Exception:
-                print ("\n[Error] [AI] Something wrong attacking!\n")
+            except Exception as e:
+                print ("\n[Error] [AI] Something wrong attacking!\n", e)
                 if DEBUG == True:
                     traceback.print_exc()
 
