@@ -5512,8 +5512,8 @@ class UFONet(object):
         # time.sleep(1) # aiming (multi-threading flow time compensation)
 
         address_dict = {'source': self.options.source, # String
-                        'start': int(self.options.port_start),
-                        'end': int(self.options.port_end)}
+                        'start': int(self.options.port_start) if isinstance(self.options.port_start, int) else None,
+                        'end': int(self.options.port_end) if isinstance(self.options.port_end, int) else None}
         print(address_dict)
         if loic:
             try:
