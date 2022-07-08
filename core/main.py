@@ -5510,10 +5510,11 @@ class UFONet(object):
     def aiming_extra_weapons(self, target, proxy, loic, loris, ufosyn, spray, smurf, fraggle, xmas, ufoack, uforst, droper, overlap, pinger, ufoudp, nuke, tachyon, monlist, sniper):
         # perform some other extra attacks (such as DoS techniques)
         time.sleep(2) # aiming (multi-threading flow time compensation)
-        
+
         address_dict = {'source': self.options.source, # String
                         'start': int(self.options.port_start),
                         'end': int(self.options.port_end)}
+        print(address_dict)
         if loic:
             try:
                 self.options.loic = int(loic)
@@ -5584,7 +5585,6 @@ class UFONet(object):
             self.instance = XMAS() # instance main class for XMAS operations
             self.t6 = threading.Thread(target=self.instance.attacking, args=(target, self.options.xmas, address_dict)) # XMAS using threads
             self.t6.daemon = True
-            print("t6 aimed")
             self.t6.start()
             self.update_xmas_stats() # add new XMAS attack to mothership stats
         if nuke:
