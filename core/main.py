@@ -6057,6 +6057,7 @@ class UFONet(object):
                     self.t4.join()
                 if self.options.smurf:
                     self.t5.join()
+                print("joining t6")
                 if self.options.xmas:
                     self.t6.join()
                 if self.options.nuke:
