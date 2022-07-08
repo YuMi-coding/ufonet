@@ -1243,15 +1243,11 @@ class UFONet(object):
             try:
                 self.banner()
                 zombies = self.extract_zombies()
-                print("passed zombies", zombies)
                 if not zombies:
                     return
                 options.target = self.parse_url_encoding(options.target) # parse for proper url encoding
-                print("passed target")
                 attack = self.attacking(zombies, options.target)
-                print("passed attacking")
                 self.update_missions_stats() # update mothership missions stats
-                print("passed mission")
             except Exception as e:
                 print ("\n[Error] [AI] Something wrong attacking!\n", e)
                 if DEBUG == True:
@@ -5588,6 +5584,7 @@ class UFONet(object):
             self.instance = XMAS() # instance main class for XMAS operations
             self.t6 = threading.Thread(target=self.instance.attacking, args=(target, self.options.xmas, address_dict)) # XMAS using threads
             self.t6.daemon = True
+            print("t6 aimed")
             self.t6.start()
             self.update_xmas_stats() # add new XMAS attack to mothership stats
         if nuke:
