@@ -5963,6 +5963,7 @@ class UFONet(object):
                 if options.loic or options.loris or options.ufosyn or options.spray or options.smurf or options.fraggle or options.xmas or options.ufoack or options.uforst or options.droper or options.overlap or options.pinger or options.ufoudp or options.nuke or options.tachyon or options.monlist or options.sniper:
                     ex = threading.Thread(target=self.aiming_extra_weapons, args=(target, self.options.proxy, self.options.loic, self.options.loris, self.options.ufosyn, self.options.spray, self.options.smurf, self.options.fraggle, self.options.xmas, self.options.ufoack, self.options.uforst, self.options.droper, self.options.overlap, self.options.pinger, self.options.ufoudp, self.options.nuke, self.options.tachyon, self.options.monlist, self.options.sniper)) # multithreading flow for extra attacks
                     ex.daemon = True # extra weapons are threaded as daemons
+                    print(ex)
                     ex.start()
                 # start to attack the target with [ARMY]
                 zombies = self.extract_zombies() # extract zombies from file
