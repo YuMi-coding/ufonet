@@ -45,7 +45,7 @@ def get_iface(source):
             address_list = ni.ifaddresses(ifname)[ni.AF_INET]
         except KeyError:
             continue
-        print(address_list)
+        # print(address_list)
         address_list = [i['addr'] for i in address_list]
         if source in address_list:
             return ifname
