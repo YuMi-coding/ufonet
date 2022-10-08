@@ -43,8 +43,9 @@ def ionize(self, target, rounds, proxy, address_dict):
                 # print("[Info] [AI] [LOIC] Firing 'pulse' ["+str(n)+"] -> [HIT!]")
             except:
                 print("[Error] [AI] LOIC: Failed to engage with 'pulse' ["+str(n)+"]")
-    except:
-        print("[Error] [AI] [LOIC] Failing to engage... -> Is still target online? -> [Checking!]")
+    except Exception as e:
+        print("[Error] [AI] [LOIC] Failing to engage... -> "
+        "Is still target online? -> [Checking!], exception encountered: {}".format(e))
 
 class LOIC(object):
     def __init__(self):
