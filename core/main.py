@@ -5511,10 +5511,14 @@ class UFONet(object):
         # perform some other extra attacks (such as DoS techniques)
         time.sleep(2) # aiming (multi-threading flow time compensation)
 
+
+        # print("self.options = {}".format(self.options))
         address_dict = {'source': self.options.source, # String
-                        'start': int(self.options.port_start) if isinstance(self.options.port_start, int) else None,
-                        'end': int(self.options.port_end) if isinstance(self.options.port_end, int) else None}
+                        'start': int(self.options.port_start) if isinstance(self.options.port_start, str) else None,
+                        'end': int(self.options.port_end) if isinstance(self.options.port_end, str) else None}
         # print(address_dict)
+        
+        # print("lanuching with address dict {}".format(address_dict))
         if loic:
             try:
                 self.options.loic = int(loic)
